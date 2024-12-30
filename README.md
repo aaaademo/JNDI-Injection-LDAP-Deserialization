@@ -2,11 +2,15 @@
 
 JNDI注入利用工具，LDAP+原生反序列化 方式绕过高版本JDK，需要配合ysoserial等序列化数据生成工具
 
+
+## udpate-1230
+
+ - 添加打印信息，提示请求/响应是否成功
+
 ## Usage
 ```bash
 java -jar JNDI-Injection-LDAP-Deserialization-1.0-SNAPSHOT.jar LDAP服务端口 Base64编码的序列化数据
 ```
-
 
 
 ## Examples
